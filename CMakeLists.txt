@@ -33,6 +33,12 @@ else()
   set(CPLEX_LIB "/opt/ibm/ILOG/CPLEX_Studio201/cplex/lib/x86-64_linux/static_pic")
   set(CPLEX_LIB2 "/opt/ibm/ILOG/CPLEX_Studio201/concert/lib/x86-64_linux/static_pic")
 endif()
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
 
 message(STATUS "CPLEX inc path: ${CPLEX_INC} and ${CPLEX_INC2}")
 add_executable(MatBuilder MatBuilder.cpp cplexMatrices.cpp MatrixTools.cpp MatrixSamplerClass.cpp Scrambling.cpp)
@@ -42,3 +48,4 @@ target_link_libraries(MatBuilder PRIVATE galois++  concert ilocplex cplex m pthr
 
 
 add_executable(sampler sampler.cpp MatrixTools.cpp Scrambling.cpp MatrixSamplerClass.cpp)
+add_executable(discrepancies MatbuilderDiscrepancies.cpp MatrixTools.cpp Scrambling.cpp MatrixSamplerClass.cpp)
